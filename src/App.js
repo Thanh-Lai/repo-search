@@ -1,23 +1,37 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import Search from './Components/Search';
+import Results from './Components/Results';
 
 function App() {
+  const [ results, setData ] = useState({});
+
+  const fetchData = () => {
+      const input = document.getElementById('input').value;
+      const github = 'https://api.github.com/search/repositories?q=';
+      fetch(github+input, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        })
+        .then(res => {
+            return res.json();
+        })
+        .then(data => {
+            console.log(data)
+          setData(data.items);
+        })
+        .catch(err => {
+            console.error(err);
+        })
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Repo Search</h1>
+      <Search handleSubmit={fetchData}/>
+      <Results data={results}/>
     </div>
   );
 }
