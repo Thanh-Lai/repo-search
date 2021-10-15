@@ -16,10 +16,13 @@ function App() {
   const [ modalShow, setShowState ] = useState(false);
 
   // Fetch Data asynchronously and set results to state
+  // Default sort is Best Match
   const fetchData = (sortBy = 'default') => {
       const input = document.getElementById('input').value;
       const sort = '&sort=' + sortBy;
       const github = 'https://api.github.com/search/repositories?q=';
+      // Set loader to true before asynchroneous action
+      // Set loader back to false when asychronous action is done
       setLoading(true);
       fetch(github+input+sort, {
           method: 'GET',
