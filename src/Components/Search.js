@@ -1,5 +1,6 @@
 
 function Search({ handleSubmit, handleOnSelect, languages, handleFilter }) {
+    // Submit search on enter
     const handleEnter = (e) => {
         if (e.which  === 13 || e.keyCode === 13) handleSubmit();
     }
