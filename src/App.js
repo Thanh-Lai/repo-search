@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import Search from './Components/Search';
 import Results from './Components/Results';
+import Details from './Components/Details';
 
 function App() {
   const [ results, setData ] = useState({});
@@ -26,7 +27,7 @@ function App() {
             const results = data.items;
             const languages = {};
             for (let key in results) {
-              let language = results[key]['language'];
+              let language = results[key].language;
               if (language === null || language === undefined) language = 'None';
               languages[language] = language;
             }
@@ -70,6 +71,17 @@ function App() {
     setFilter(filter);
   }
 
+  const [popupInfo, setInfo] = useState({});
+  const [modalShow, setShowState] = useState(false);
+  const handlePopup = (info) => {
+      setInfo(info);
+      setModalShow(true);
+  }
+
+  const setModalShow = (state) => {
+      setShowState(state);
+  }
+
   return (
     <div className="App">
       <h1>Repo Search</h1>
@@ -79,7 +91,12 @@ function App() {
           handleFilter={handleFilter}
           languages={Object.keys(languages)}
       />
-      <Results filter={filter} data={results}/>
+      <Results handlePopup={handlePopup} filter={filter} data={results}/>
+      <Details 
+                info={popupInfo}
+                show={modalShow}
+                onHide={() => setModalShow(false)}
+            />
     </div>
   );
 }
