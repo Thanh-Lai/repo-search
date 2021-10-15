@@ -1,11 +1,14 @@
 function Results({data, filter, handlePopup}) {
+    // If no languages is selected return blank
     if (!Object.keys(filter).length) return (<div></div>);
+
     return (
         <div className="results-container">
             {
                 Object.keys(data).map(key => {
                     const info = data[key];
                     const language = info.language === null || info.language === undefined ? 'None' : info.language;
+                    // skip any language that is not selected
                     if (Object.keys(filter).length && !filter[language]) return;
 
                     return (

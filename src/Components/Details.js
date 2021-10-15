@@ -1,6 +1,7 @@
 import { Modal, Button } from 'react-bootstrap';
 
 function Details(props) {
+    // If show pop up is false, return blank other wise return Modal card
     if (!props.show) return (
         <div></div>
     )
