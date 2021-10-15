@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { ClipLoader } from "react-spinners";
+import { css } from "@emotion/react";
 import './App.css';
 import Search from './Components/Search';
 import Results from './Components/Results';
@@ -9,11 +11,13 @@ function App() {
   const [ languages, setLanguages ] = useState({});
   const [ filter, setFilter] = useState({});
   const [ active, setActive ] = useState(false);
+  let [loading, setLoading] = useState(false);
 
   const fetchData = (sortBy = 'default') => {
       const input = document.getElementById('input').value;
       const sort = '&sort=' + sortBy;
       const github = 'https://api.github.com/search/repositories?q=';
+      setLoading(true);
       fetch(github+input+sort, {
           method: 'GET',
           headers: {
@@ -27,14 +31,15 @@ function App() {
             const results = data.items;
             const languages = {};
             for (let key in results) {
-              let language = results[key].language;
+              let language = results[key]['language'];
               if (language === null || language === undefined) language = 'None';
               languages[language] = language;
             }
             setData(results);
             setLanguages(languages);
             setActive(true);
-            setFilter({});
+            setFilter(languages);
+            setLoading(false);
             const options = document.getElementsByClassName('language-options');
             document.getElementById('select-all').checked = true;
             for (let item of options) {
@@ -55,16 +60,16 @@ function App() {
   const handleFilter = (e) => {
     const selected = e.target;
     const options = document.getElementsByClassName('language-options');
-    if (selected.value === 'select-all') {
-        let isChecked = null;
-        for (let item of options) {
-          selected.checked ? isChecked = true : isChecked = false;
-          item.checked = isChecked;
-        }
-    } else {
-      document.getElementById('select-all').checked = false;
-    }
     const filter = {};
+    if (selected.value === 'select-all') {
+        for (let item of options) {
+          if (selected.checked) filter[item.value] = true;
+          item.checked = selected.checked;
+        }
+        setFilter(filter);
+        return;
+    } 
+    document.getElementById('select-all').checked = false;
     for (let item of options) {
         if (item.checked) filter[item.value] = true;
     }
@@ -82,6 +87,12 @@ function App() {
       setShowState(state);
   }
 
+  const override = css`
+    display: block;
+    margin: 0 auto;
+    margin-top: 50px;
+  `;
+
   return (
     <div className="App">
       <h1>Repo Search</h1>
@@ -91,12 +102,19 @@ function App() {
           handleFilter={handleFilter}
           languages={Object.keys(languages)}
       />
-      <Results handlePopup={handlePopup} filter={filter} data={results}/>
+
+      {
+        loading
+        ?
+          <ClipLoader css={override} loading={loading} size={150} />
+        :
+          <Results handlePopup={handlePopup} filter={filter} data={results}/>
+      }
       <Details 
-                info={popupInfo}
-                show={modalShow}
-                onHide={() => setModalShow(false)}
-            />
+          info={popupInfo}
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+      />
     </div>
   );
 }

@@ -1,8 +1,12 @@
 
 function Search({ handleSubmit, handleOnSelect, languages, handleFilter }) {
+    const handleEnter = (e) => {
+        if (e.which  === 13 || e.keyCode === 13) handleSubmit();
+    }
+
     return (
         <div>
-            <input id="input" ></input>
+            <input onKeyDown={handleEnter} id="input" ></input>
             <span>
                 <button onClick={handleSubmit}>Search</button>
                 <select onChange={handleOnSelect} id="select-bar">
