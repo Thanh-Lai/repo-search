@@ -1,17 +1,22 @@
-function Search({data, filter}) {
+function Results({data, filter, handlePopup}) {
+    // If no languages is selected return blank
+    if (!Object.keys(filter).length) return (<div></div>);
+
     return (
         <div className="results-container">
             {
                 Object.keys(data).map(key => {
                     const info = data[key];
-                    const language = info['language'] === null || info['language'] === undefined ? 'None' : info['language'];
+                    const language = info.language === null || info.language === undefined ? 'None' : info.language;
+                    // skip any language that is not selected
                     if (Object.keys(filter).length && !filter[language]) return;
 
                     return (
-                        <div key={key} className="card">
-                                <div className="card-container">
-                                <h4><b>{info['full_name']}</b></h4> 
-                                <p>{info['html_url']}</p> 
+                        <div onClick={() => handlePopup(info)} key={key} className="card card-container">
+                            <div className="card-container">
+                                <img src={info.owner.avatar_url} width="100" height="100"></img>
+                                <h4><b>{info.full_name}</b></h4> 
+                                <a href={info.html_url} target='_blank'>{info.html_url}</a> 
                             </div>
                         </div>
                     )
@@ -21,4 +26,4 @@ function Search({data, filter}) {
     );
 }
 
-export default Search;
+export default Results
