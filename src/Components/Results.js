@@ -1,17 +1,19 @@
-function Search({data}) {
+function Search({data, filter}) {
     return (
         <div className="results-container">
             {
                 Object.keys(data).map(key => {
                     const info = data[key];
-                        return (
-                            <div key={key} className="card">
-                                {/* <img src="img_avatar.png" alt="Avatar" style="width:100%"></img> */}
-                                 <div className="card-container">
-                                    <h4><b>{info['full_name']}</b></h4> 
-                                    <p>{info['html_url']}</p> 
-                                </div>
+                    const language = info['language'] === null || info['language'] === undefined ? 'None' : info['language'];
+                    if (Object.keys(filter).length && !filter[language]) return;
+
+                    return (
+                        <div key={key} className="card">
+                                <div className="card-container">
+                                <h4><b>{info['full_name']}</b></h4> 
+                                <p>{info['html_url']}</p> 
                             </div>
+                        </div>
                     )
                 })
             }
