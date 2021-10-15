@@ -8,7 +8,7 @@ function Search({ handleSubmit, handleOnSelect, languages, handleFilter }) {
         <div>
             <input onKeyDown={handleEnter} id="input" ></input>
             <span>
-                <button onClick={handleSubmit}>Search</button>
+                <button id="searchb-btn" onClick={handleSubmit}>Search</button>
                 <select onChange={handleOnSelect} id="select-bar">
                     <option value="default" >Best Match</option>
                     <option value="stars" >Stars</option>
